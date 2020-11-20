@@ -1,0 +1,6 @@
+*.out
+firewall
+ccdaemon
+*.ur-safe
+*.swp
+*.swo
