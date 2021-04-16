@@ -10,7 +10,13 @@
 
 #define DISABLE_WRITE_PROTECTION        (write_cr0(read_cr0() & (~ 0x10000)))
 #define ENABLE_WRITE_PROTECTION         (write_cr0(read_cr0() | (0x10000)))
-
+#define AL(x) ((x) * sizeof(unsigned long))
+static const unsigned char nargs[20] = {
+    AL(0), AL(3), AL(3), AL(3), AL(2), AL(3),
+    AL(3), AL(3), AL(4), AL(4), AL(4), AL(6),
+    AL(6), AL(2), AL(5), AL(5), AL(3), AL(3),
+    AL(4), AL(5)
+};
 
 /*Function prototype*/
 void **system_call_table;
