@@ -4,19 +4,12 @@
 #include <linux/net.h>
 #include <linux/in.h>
 #include <linux/socket.h>
+#include <linux/unistd.h>
 
 #include "../user/struct.h"
 
 #define DISABLE_WRITE_PROTECTION        (write_cr0(read_cr0() & (~ 0x10000)))
 #define ENABLE_WRITE_PROTECTION         (write_cr0(read_cr0() | (0x10000)))
-
-#define AL(x)  ((x) * sizeof(unsigned long))
-static const unsigned char nargs[20] = {
-    AL(0), AL(3), AL(3), AL(3), AL(2), AL(3),
-    AL(3), AL(3), AL(4), AL(4), AL(4), AL(6),
-    AL(6), AL(2), AL(5), AL(5), AL(3), AL(3),
-    AL(4), AL(5)
-};
 
 
 /*Function prototype*/
@@ -74,10 +67,6 @@ asmlinkage long hacked_sys_connectcall(int call, unsigned long __user *args)
 
 	if (call < 1 || call > SYS_RECVMMSG)
 		return -EINVAL;
-	len = nargs[call];
-	if (len > sizeof(a))
-		return -EINVAL;
-
 	/*use for debug*/
 //        printk(KERN_INFO "check socketcall.\n");
 
@@ -113,7 +102,7 @@ asmlinkage long hacked_sys_connectcall(int call, unsigned long __user *args)
 		/*Implement this*/
 		{
 			struct sockaddr_in *addr = (struct sockaddr_in *)a1;
-			char buf[4*sizeof "123"];
+			char buf[16];
 
 			if(addr->sin_family == AF_INET){
 				inet_ntoa(buf, addr->sin_addr);
